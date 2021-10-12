@@ -45,19 +45,14 @@ test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'HernanWilkinson 5/9/2012 18:12'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'IB 10/12/2021 15:13:58'!
 test03CanNotAddACustomerWithEmptyName 
 
 	| customerBook |
 			
 	customerBook := CustomerBook new.
 
-	[ customerBook addCustomerNamed: ''.
-	self fail ]
-		on: Error 
-		do: [ :anError | 
-			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
-			self assert: customerBook isEmpty ]! !
+	self should: [ customerBook addCustomerNamed: '' ] raise: Error withMessageText: (CustomerBook customerCanNotBeEmptyErrorMessage).! !
 
 !CustomerBookTest methodsFor: 'tests' stamp: 'HAW 8/28/2017 08:57:25'!
 test04CanNotRemoveAnInvalidCustomer
