@@ -109,7 +109,7 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'IB 10/12/2021 16:33:35'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'IB 10/12/2021 16:41:10'!
 test07CanNotSuspendAnInvalidCustomer
 	
 	| customerBook |
@@ -117,12 +117,6 @@ test07CanNotSuspendAnInvalidCustomer
 	customerBook := CustomerBook new.
 	customerBook addCustomerNamed: 'John Lennon'.
 	
-	"[ customerBook suspendCustomerNamed: 'Ringo Starr'.
-	self fail ]
-		on: CantSuspend 
-		do: [ :anError | 
-			self assert: customerBook numberOfCustomers = 1.
-			self assert: (customerBook includesCustomerNamed: johnLennon) ]"
 	self should: [ customerBook suspendCustomerNamed: 'Ringo Starr' ] raise: CantSuspend.
 	self assert: 1 equals: (customerBook numberOfCustomers).
 	self assert: (customerBook includesCustomerNamed: 'John Lennon').! !
@@ -156,36 +150,24 @@ initialize
 	suspended:= OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'IB 10/13/2021 13:31:28'!
 addCustomerNamed: aName
 
 	aName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
-	((active includes: aName) or: [suspended includes: aName]) ifTrue: [ self signalCustomerAlreadyExists ].
+	(self includesCustomerNamed: aName) ifTrue: [ self signalCustomerAlreadyExists ].
 	
 	active add: aName ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'IB 10/13/2021 13:33:29'!
 removeCustomerNamed: aName 
  
-	1 to: active size do: 
-	[ :index |
-		aName = (active at: index)
-			ifTrue: [
-				active removeAt: index.
-				^ aName 
-			] 
-	].
-
-	1 to: suspended size do: 	
-	[ :index |
-		aName = (suspended at: index)
-			ifTrue: [
-				suspended removeAt: index.
-				^ aName 
-			] 
-	].
+	active remove: aName ifAbsent: [
+			suspended remove: aName ifAbsent: [
+					^ NotFound signal.
+				].
+		].
 	
-	^ NotFound signal.
+	
 ! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
@@ -204,10 +186,10 @@ numberOfActiveCustomers
 	
 	^active size! !
 
-!CustomerBook methodsFor: 'accessing' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'accessing' stamp: 'IB 10/13/2021 13:32:12'!
 numberOfCustomers
 	
-	^active size + suspended size! !
+	^self numberOfActiveCustomers + self numberOfSuspendedCustomers.! !
 
 !CustomerBook methodsFor: 'accessing' stamp: 'NR 9/19/2018 17:36:09'!
 numberOfSuspendedCustomers
