@@ -425,10 +425,10 @@ initializeWith: aNumerator over: aDenominator
 	denominator := aDenominator ! !
 
 
-!Numero methodsFor: 'accessing' stamp: 'NR 9/8/2019 20:59:46'!
+!Numero methodsFor: 'accessing' stamp: 'IB 10/25/2021 12:57:20'!
 denominator
 
-	^denominator! !
+	self subclassResponsibility.! !
 
 !Numero methodsFor: 'accessing' stamp: 'NR 9/8/2019 20:33:53'!
 integerValue
@@ -437,52 +437,27 @@ integerValue
 	
 	^value! !
 
-!Numero methodsFor: 'accessing' stamp: 'NR 9/8/2019 21:55:04'!
-type
-	
-	^type! !
 
-
-!Numero methodsFor: 'printing' stamp: 'NR 9/8/2019 21:59:58'!
+!Numero methodsFor: 'printing' stamp: 'IB 10/25/2021 17:11:28'!
 printOn: aStream
 	
-	type = #Entero ifTrue:
-		[ aStream print: value ].
-	
-	type = #Fraccion ifTrue:
-		[ aStream 
-			print: numerator;
-			nextPut: $/;
-			print: denominator ].! !
+	self subclassResponsibility.! !
 
 
-!Numero methodsFor: 'comparing' stamp: 'LL 9/15/2020 11:00:17'!
+!Numero methodsFor: 'comparing' stamp: 'IB 10/25/2021 12:55:56'!
 = anObject
 
-	((anObject isKindOf: self class) and: [ type = anObject type ]) ifTrue: [
-		type = #Entero ifTrue: [ ^value = anObject integerValue ].
-		type = #Fraccion ifTrue: [ ^(numerator * anObject denominator) = (denominator * anObject numerator) ].
-		^false
-	].
+	self subclassResponsibility.! !
 
-	^false
-! !
-
-!Numero methodsFor: 'comparing' stamp: 'NR 9/8/2019 22:00:49'!
+!Numero methodsFor: 'comparing' stamp: 'IB 10/25/2021 14:02:31'!
 hash
-	type = #Entero ifTrue:
-		[ ^value hash ].
-	type = #Fraccion ifTrue:
-		[ ^(numerator hash / denominator hash) hash ].! !
+	self subclassResponsibility.! !
 
 
-!Numero methodsFor: 'arithmetic operations - private' stamp: 'NR 9/9/2019 16:21:07'!
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'IB 10/25/2021 12:53:20'!
 // aDivisor 
 	
-	type = #Entero ifTrue:
-		[ ^self class with: value // aDivisor integerValue ].
-		
-	self error: 'Tipo de número no soportado'! !
+	self subclassResponsibility.! !
 
 !Numero methodsFor: 'arithmetic operations - private' stamp: 'lj 10/25/2021 08:37:11'!
 addFraction: aFraction
@@ -500,13 +475,10 @@ divideByFraction: aFraction
 divideByInteger: anIntegerValue
 	self subclassResponsibility .! !
 
-!Numero methodsFor: 'arithmetic operations - private' stamp: 'LL 9/13/2020 16:50:25'!
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'IB 10/25/2021 14:00:56'!
 greatestCommonDivisorWith: anEntero 
 	
-	type = #Entero ifTrue:
-		[ ^self class with: (value gcd: anEntero integerValue) ].
-		
-	self error: 'Tipo de número no soportado'! !
+	self subclassResponsibility.! !
 
 !Numero methodsFor: 'arithmetic operations - private' stamp: 'lj 10/25/2021 08:39:31'!
 multiplyByInteger: anIntegerValue
@@ -597,6 +569,10 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
+!Entero methodsFor: 'as yet unclassified' stamp: 'IB 10/25/2021 12:57:47'!
+denominator
+	^ 1.! !
+
 !Entero methodsFor: 'as yet unclassified' stamp: 'lj 10/18/2021 21:24:28'!
 valueIs: aNewValue
 	value := aNewValue.! !
@@ -669,10 +645,10 @@ integerValue
 	^ value! !
 
 
-!Entero methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:53:19'!
+!Entero methodsFor: 'printing' stamp: 'IB 10/25/2021 17:09:54'!
 printOn: aStream
-
-	aStream print: value ! !
+	
+	aStream print value.! !
 
 
 !Entero methodsFor: 'testing' stamp: 'lj 10/25/2021 06:54:52'!
@@ -774,6 +750,15 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
+!Fraccion methodsFor: 'as yet unclassified' stamp: 'IB 10/25/2021 12:52:33'!
+// aDivisor
+	self error: 'Tipo de número no soportado'.
+	! !
+
+!Fraccion methodsFor: 'as yet unclassified' stamp: 'IB 10/25/2021 14:01:35'!
+greatestCommonDivisorWith: anEntero 
+	self error: 'Tipo de número no soportado'! !
+
 !Fraccion methodsFor: 'as yet unclassified' stamp: 'lj 10/25/2021 07:05:18'!
 valuesAre: aNumerator and: aDenominator
 
@@ -806,11 +791,10 @@ inverse
 	^ Fraccion with: denominator over: numerator.! !
 
 
-!Fraccion methodsFor: 'comparing' stamp: 'lj 10/25/2021 05:36:09'!
+!Fraccion methodsFor: 'comparing' stamp: 'IB 10/25/2021 12:55:36'!
 = anObject
 
-	^(anObject isKindOf: self class) and: [ (numerator * anObject denominator) = (denominator * anObject numerator) ]"
-	(self numerator = anObject numerator) and: (self denominator = anObject denominator)."! !
+	^(anObject isKindOf: self class) and: [ (numerator * anObject denominator) = (denominator * anObject numerator) ]! !
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:50'!
 hash
@@ -907,13 +891,13 @@ substractInteger: anIntegerValue
 	^ Fraccion with: (Entero with: newNumerator) over: denominator! !
 
 
-!Fraccion methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:54:46'!
+!Fraccion methodsFor: 'printing' stamp: 'IB 10/25/2021 17:11:09'!
 printOn: aStream
 
-	aStream 
-		print: numerator;
-		nextPut: $/;
-		print: denominator ! !
+	aStream
+			print: numerator;
+			nextPut: $/;
+			print: denominator! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
