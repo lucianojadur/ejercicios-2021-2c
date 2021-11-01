@@ -1,4 +1,4 @@
-!classDefinition: #OOStackTest category: #'Stack-Exercise'!
+!classDefinition: #OOStackTest category: 'Stack-Exercise'!
 TestCase subclass: #OOStackTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -137,7 +137,7 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 ! !
 
 
-!classDefinition: #SentenceFinderByPrefixTest category: #'Stack-Exercise'!
+!classDefinition: #SentenceFinderByPrefixTest category: 'Stack-Exercise'!
 TestCase subclass: #SentenceFinderByPrefixTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -145,16 +145,139 @@ TestCase subclass: #SentenceFinderByPrefixTest
 	category: 'Stack-Exercise'!
 
 
-!classDefinition: #OOStack category: #'Stack-Exercise'!
-Object subclass: #OOStack
+!classDefinition: #Node category: 'Stack-Exercise'!
+Object subclass: #Node
+	instanceVariableNames: 'content next'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!Node methodsFor: 'as yet unclassified' stamp: 'lj 10/31/2021 23:36:27'!
+add: anElement
+	content := anElement
+	! !
+
+!Node methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:09:39'!
+content
+	self subclassResponsibility .! !
+
+!Node methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:06:17'!
+next
+	self subclassResponsibility .! !
+
+!Node methodsFor: 'as yet unclassified' stamp: 'lj 10/31/2021 23:43:39'!
+next: aNode
+	next := aNode .! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Node class' category: 'Stack-Exercise'!
+Node class
+	instanceVariableNames: ''!
+
+!Node class methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:18:54'!
+with: anElement
+	|node|
+	node := FilledNode new .
+	node add: anElement.
+	^ node.! !
+
+!Node class methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:19:59'!
+with: anElement after: aNode
+	|node|
+	node := FilledNode new .
+	node add: anElement.
+	node next: aNode .
+	^ node.! !
+
+
+!classDefinition: #EmptyNode category: 'Stack-Exercise'!
+Node subclass: #EmptyNode
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
+!EmptyNode methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:30:54'!
+content
+	"Preguntar si es correcto enviar una excepción hacia 'arrbia' (stack) y maniobrarla o si se puede desde acá mismo devolver un
+	error: OOStack stackEmpty... (me parece falopa esto último pero la primera opción creo que rompe con lo que pide la consigna)."
+	 self error: 'Empty node'.! !
+
+!EmptyNode methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:30:49'!
+next
+	"Preguntar si es correcto enviar una excepción hacia 'arrbia' (stack) y maniobrarla ahí o si se puede desde acá mismo devolver un
+	error: OOStack stackEmpty... (me parece falopa esto último pero la primera opción creo que rompe con lo que pide la consigna)."
+	 self error: 'Empty node'.! !
+
+
+!classDefinition: #FilledNode category: 'Stack-Exercise'!
+Node subclass: #FilledNode
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!FilledNode methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:24:02'!
+content
+
+	^ content.! !
+
+!FilledNode methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:06:01'!
+next
+	
+	^ next .! !
+
+
+!classDefinition: #OOStack category: 'Stack-Exercise'!
+Object subclass: #OOStack
+	instanceVariableNames: 'top size'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!OOStack methodsFor: 'updating messages' stamp: 'lj 11/1/2021 02:20:47'!
+pop
+	|element|
+	
+	[	
+		element := top content.
+		top := top next.
+		size := size - 1.
+		^ element.
+	 ]on: Error do: [self error: OOStack stackEmptyErrorDescription].
+	! !
+
+!OOStack methodsFor: 'updating messages' stamp: 'lj 10/31/2021 23:49:03'!
+push: anElement
+	top := Node with: anElement after: top.
+	size := size + 1.
+	! !
+
+
+!OOStack methodsFor: 'status-check messages' stamp: 'lj 11/1/2021 00:09:27'!
+initialize
+
+	top := EmptyNode new.
+	size := 0 .! !
+
+!OOStack methodsFor: 'status-check messages' stamp: 'lj 10/31/2021 23:48:13'!
+isEmpty
+	
+	^ size = 0.! !
+
+!OOStack methodsFor: 'status-check messages' stamp: 'lj 10/31/2021 23:51:24'!
+size
+	^ size.! !
+
+!OOStack methodsFor: 'status-check messages' stamp: 'lj 11/1/2021 02:05:32'!
+top
+	
+	[^ top content] on: Error do: [ self error: OOStack stackEmptyErrorDescription].! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'OOStack class' category: #'Stack-Exercise'!
+!classDefinition: 'OOStack class' category: 'Stack-Exercise'!
 OOStack class
 	instanceVariableNames: ''!
 
@@ -164,7 +287,7 @@ stackEmptyErrorDescription
 	^ 'Stack is empty'! !
 
 
-!classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
+!classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
 Object subclass: #SentenceFinderByPrefix
 	instanceVariableNames: ''
 	classVariableNames: ''
