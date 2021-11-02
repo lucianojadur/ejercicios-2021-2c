@@ -157,8 +157,8 @@ add: anElement
 	content := anElement
 	! !
 
-!Node methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:09:39'!
-content
+!Node methodsFor: 'as yet unclassified' stamp: 'IB 11/2/2021 13:20:23'!
+contentIfEmpty: aBlock
 	self subclassResponsibility .! !
 
 !Node methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:06:17'!
@@ -198,11 +198,9 @@ Node subclass: #EmptyNode
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!EmptyNode methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:30:54'!
-content
-	"Preguntar si es correcto enviar una excepción hacia 'arrbia' (stack) y maniobrarla o si se puede desde acá mismo devolver un
-	error: OOStack stackEmpty... (me parece falopa esto último pero la primera opción creo que rompe con lo que pide la consigna)."
-	 self error: 'Empty node'.! !
+!EmptyNode methodsFor: 'as yet unclassified' stamp: 'IB 11/2/2021 13:23:56'!
+contentIfEmpty: aBlock
+	^ aBlock value.! !
 
 !EmptyNode methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:30:49'!
 next
@@ -218,8 +216,8 @@ Node subclass: #FilledNode
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!FilledNode methodsFor: 'as yet unclassified' stamp: 'lj 11/1/2021 02:24:02'!
-content
+!FilledNode methodsFor: 'as yet unclassified' stamp: 'IB 11/2/2021 13:20:23'!
+contentIfEmpty: aBlock
 
 	^ content.! !
 
@@ -236,16 +234,14 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'updating messages' stamp: 'lj 11/1/2021 02:20:47'!
+!OOStack methodsFor: 'updating messages' stamp: 'IB 11/2/2021 13:23:12'!
 pop
 	|element|
 	
-	[	
-		element := top content.
-		top := top next.
-		size := size - 1.
-		^ element.
-	 ]on: Error do: [self error: OOStack stackEmptyErrorDescription].
+	element := top contentIfEmpty: [self error: OOStack stackEmptyErrorDescription].
+	top := top next.
+	size := size - 1.
+	^ element.
 	! !
 
 !OOStack methodsFor: 'updating messages' stamp: 'lj 10/31/2021 23:49:03'!
@@ -270,10 +266,10 @@ isEmpty
 size
 	^ size.! !
 
-!OOStack methodsFor: 'status-check messages' stamp: 'lj 11/1/2021 02:05:32'!
+!OOStack methodsFor: 'status-check messages' stamp: 'IB 11/2/2021 13:24:39'!
 top
 	
-	[^ top content] on: Error do: [ self error: OOStack stackEmptyErrorDescription].! !
+	^ top contentIfEmpty: [self error: OOStack stackEmptyErrorDescription].! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
