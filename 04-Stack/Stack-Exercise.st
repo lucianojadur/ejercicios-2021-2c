@@ -339,21 +339,6 @@ push: anElement
 	! !
 
 
-!OOStack methodsFor: 'status-check messages' stamp: 'lj 11/4/2021 14:10:34'!
-= anotherStack
-	size = anotherStack size ifTrue:[  |count auxSelfTop auxOtherTop|
-		count := 0.
-		auxSelfTop := top.
-		auxOtherTop := anotherStack top.
-		[count < self size] whileTrue:[
-			auxSelfTop content = auxOtherTop content ifFalse: [^ false].
-			auxSelfTop := auxSelfTop next.
-			auxOtherTop := auxOtherTop next.
-			count = count + 1.
-		].
-	]
-	ifFalse: [^ false].! !
-
 !OOStack methodsFor: 'status-check messages' stamp: 'lj 11/1/2021 20:42:07'!
 initialize
 
