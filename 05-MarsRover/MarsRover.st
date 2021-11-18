@@ -29,16 +29,16 @@ test03IniciarMarsRoverConCoordenadasYDireccionInicial
 	self assert: coordsIniciales equals: marsRover coordenadas.
 	self assert: direccionInicial equals: marsRover direccionCardinal.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/17/2021 12:47:39'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 12:01:45'!
 test04NoSePuedeIniciarMarsRoverConDireccionInvalida
 	| marsRover |
-	self should: [marsRover := MarsRover enCoordenadas: 1@2 conDireccion: 'p'] raise: Error description: 'Direccion Invalida'.! !
+	self should: [marsRover := MarsRover enCoordenadas: 1@2 conDireccion: 'p'] raise: Error description: MarsRover direccionInvalidaError.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:22:54'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:30:10'!
 test05MarsRoverRecibeComandoParaAvanzarDireccionNorteYAvanza
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'N'.
-	comando := Comando conCaracter: 'f'.
+	comando := 'f'.
 	marsRover ejecutar: comando.
 	self assert: 2@5 equals: marsRover coordenadas.
 	"En este modelo:
@@ -47,35 +47,35 @@ test05MarsRoverRecibeComandoParaAvanzarDireccionNorteYAvanza
 		S = -y
 	"! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:23:09'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:31:07'!
 test06MarsRoverRecibeComandoParaAvanzarDireccionSurYAvanza
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'S'.
-	comando := Comando conCaracter: 'f'.
+	comando := 'f'.
 	marsRover ejecutar: comando.
 	self assert: 2@3 equals: marsRover coordenadas.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:23:18'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:31:14'!
 test07MarsRoverRecibeComandoParaAvanzarDireccionOesteYAvanza
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'W'.
-	comando := Comando conCaracter: 'f'.
+	comando := 'f'.
 	marsRover ejecutar: comando.
 	self assert: 1@4 equals: marsRover coordenadas.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:23:30'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:31:21'!
 test08MarsRoverRecibeComandoParaAvanzarDireccionEsteYAvanza
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'E'.
-	comando := Comando conCaracter: 'f'.
+	comando := 'f'.
 	marsRover ejecutar: comando.
 	self assert: 3@4 equals: marsRover coordenadas.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:26:51'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:31:28'!
 test09MarsRoverApuntandoAlNorteRecibeComandoParaRetrocederYRetrocedeHaciaElSur
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'N'.
-	comando := Comando conCaracter: 'b'.
+	comando := 'b'.
 	marsRover ejecutar: comando.
 	self assert: 2@3 equals: marsRover coordenadas.
 	"En este modelo:
@@ -84,11 +84,11 @@ test09MarsRoverApuntandoAlNorteRecibeComandoParaRetrocederYRetrocedeHaciaElSur
 		S = -y
 	"! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:27:08'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:31:37'!
 test10MarsRoverApuntandoAlSurRecibeComandoParaRetrocederYRetrocedeHaciaElNorte
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'S'.
-	comando := Comando conCaracter: 'b'.
+	comando := 'b'.
 	marsRover ejecutar: comando.
 	self assert: 2@5 equals: marsRover coordenadas.
 	"En este modelo:
@@ -97,98 +97,108 @@ test10MarsRoverApuntandoAlSurRecibeComandoParaRetrocederYRetrocedeHaciaElNorte
 		S = -y
 	"! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:29:07'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:31:47'!
 test11MarsRoverApuntandoAlOesteRecibeComandoParaRetrocederYRetrocedeHaciaElEste
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'W'.
-	comando := Comando conCaracter: 'b'.
+	comando := 'b'.
 	marsRover ejecutar: comando.
 	self assert: 3@4 equals: marsRover coordenadas.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:29:47'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:31:55'!
 test12MarsRoverApuntandoAlEsteRecibeComandoParaRetrocederYRetrocedeHaciaElOeste
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'E'.
-	comando := Comando conCaracter: 'b'.
+	comando := 'b'.
 	marsRover ejecutar: comando.
 	self assert: 1@4 equals: marsRover coordenadas.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 04:33:21'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:32:10'!
 test13MarsRoverApuntandoHaciaElNorteRecibeComandoLeftYGiraHaciaElOeste
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'N'.
-	comando := Comando conCaracter: 'l'.
+	comando := 'l'.
 	marsRover ejecutar: comando.
 	self assert: 'W' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:16:07'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:32:18'!
 test14MarsRoverApuntandoHaciaElNorteRecibeComandoRightYGiraHaciaElEste
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'N'.
-	comando := Comando conCaracter: 'r'.
+	comando := 'r'.
 	marsRover ejecutar: comando.
 	self assert: 'E' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:17:18'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:32:55'!
 test15MarsRoverApuntandoHaciaElSurRecibeComandoLeftYGiraHaciaElEste
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'S'.
-	comando := Comando conCaracter: 'l'.
+	comando := 'l'.
 	marsRover ejecutar: comando.
 	self assert: 'E' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:20:05'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:33:16'!
 test16MarsRoverApuntandoHaciaElSurRecibeComandoRightYGiraHaciaElOeste
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'S'.
-	comando := Comando conCaracter: 'r'.
+	comando := 'r'.
 	marsRover ejecutar: comando.
 	self assert: 'W' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:21:14'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:33:24'!
 test17MarsRoverApuntandoHaciaElOesteRecibeComandoLeftYGiraHaciaElSur
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'W'.
-	comando := Comando conCaracter: 'l'.
+	comando := 'l'.
 	marsRover ejecutar: comando.
 	self assert: 'S' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:20:46'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:33:41'!
 test18MarsRoverApuntandoHaciaElOesteRecibeComandoRightYGiraHaciaElNorte
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'W'.
-	comando := Comando conCaracter: 'r'.
+	comando := 'r'.
 	marsRover ejecutar: comando.
 	self assert: 'N' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:21:47'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:33:52'!
 test19MarsRoverApuntandoHaciaElEsteRecibeComandoLeftYGiraHaciaElNorte
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'E'.
-	comando := Comando conCaracter: 'l'.
+	comando := 'l'.
 	marsRover ejecutar: comando.
 	self assert: 'N' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:41:54'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:34:02'!
 test20MarsRoverApuntandoHaciaElEsteRecibeComandoRightYGiraHaciaElSur
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'E'.
-	comando := Comando conCaracter: 'r'.
+	comando := 'r'.
 	marsRover ejecutar: comando.
 	self assert: 'S' equals: marsRover direccionCardinal .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:42:13'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:34:19'!
 test21MarsRoverRecibeUnComandoDeRotacionYSuPosicionPermaneceIgual
 	| marsRover comando |
 	marsRover := MarsRover enCoordenadas: 4@4 conDireccion: 'E'.
-	comando := Comando conCaracter: 'l'.
+	comando := 'l'.
 	marsRover ejecutar: comando.
 	self assert: 4@4 equals: marsRover coordenadas .! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:42:04'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:57:51'!
 test22MarsRoverNoPuedeRecibirUnComandoNoValido
 	| marsRover comando |
-	marsRover := MarsRover enCoordenadas: 4@4 conDireccion: 'E'.! !
+	marsRover := MarsRover enCoordenadas: 4@4 conDireccion: 'E'.
+	comando := 'p'.
+	self should: [marsRover ejecutar: comando] raise: Error description: Comando comandoInvalidoError.! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 12:04:25'!
+test23MarsRoverRecibeComandoParaAvanzar2VecesDireccionNorteYAvanza
+	| marsRover comando |
+	marsRover := MarsRover enCoordenadas: 2@4 conDireccion: 'N'.
+	comando := 'ff'.
+	marsRover ejecutar: comando.
+	self assert: 2@6 equals: marsRover coordenadas.! !
 
 
 !classDefinition: #Comando category: 'MarsRover'!
@@ -197,7 +207,6 @@ Object subclass: #Comando
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover'!
-
 
 !Comando methodsFor: 'private' stamp: 'lj 11/18/2021 04:17:14'!
 conCaracter: unChar
@@ -217,16 +226,16 @@ Comando class
 comandoInvalidoError
 	^ 'El carácter ingresado no corresponde a un comando válido'.! !
 
-!Comando class methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:41:12'!
+!Comando class methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 11:55:10'!
 conCaracter: unCaracter
-	|comando|
-	(unCaracter = 'f') | (unCaracter = 'b') | (unCaracter = 'r') | (unCaracter = 'l') ifFalse: [self error: self comandoInvalidoError ].
-	unCaracter = 'f' ifTrue: [comando := Avance new conCaracter: unCaracter].
-	unCaracter = 'b' ifTrue: [comando := Retroceso new conCaracter: unCaracter].
-	unCaracter = 'l' ifTrue: [comando := RotacionIzquierda new conCaracter: unCaracter].
-	unCaracter = 'r' ifTrue: [comando := RotacionDerecha new conCaracter: unCaracter].
 	
-	^comando.! !
+	unCaracter = $f ifTrue: [^Avance new conCaracter: unCaracter].
+	unCaracter = $b ifTrue: [^Retroceso new conCaracter: unCaracter].
+	unCaracter = $l ifTrue: [^RotacionIzquierda new conCaracter: unCaracter].
+	unCaracter = $r ifTrue: [^RotacionDerecha new conCaracter: unCaracter].
+	
+	self error: self comandoInvalidoError.
+! !
 
 
 !classDefinition: #Avance category: 'MarsRover'!
@@ -436,14 +445,13 @@ coordenadas
 direccionCardinal
 	^ direccion nombre.! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:11:51'!
-ejecutar: comando
-	"comando = 'f' ifTrue: [
-		""Acá creo que habría que pasarle self en vez de las coordenadas para no romper el encapsulamiento,
-		aunque Direccion sea inherente al MarsRover."
-			"coords := direccion moveFoward: coords.
-		]"
-	comando mover: self .! !
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 12:05:21'!
+ejecutar: aString
+	| comando |
+	1 to: aString size do: [ :index |
+			comando := Comando conCaracter: (aString at: index).
+			comando mover: self.
+		]! !
 
 !MarsRover methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:16:48'!
 girarADerecha
@@ -458,13 +466,13 @@ initialize
 	coords := 0@0.
 	direccion := DireccionNorte new.! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'IB 11/17/2021 12:37:28'!
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 12:02:49'!
 leerDireccion: aString
 	aString = 'N' ifTrue: [^DireccionNorte new].
 	aString = 'S' ifTrue: [^DireccionSur new].
 	aString = 'W' ifTrue: [^DireccionOeste new].
 	aString = 'E' ifTrue: [^DireccionEste new].
-	self error: 'Direccion Invalida'.! !
+	self error: (self class direccionInvalidaError).! !
 
 !MarsRover methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:12:45'!
 retroceder
@@ -484,6 +492,10 @@ posicionarInicialmenteEn: unPunto
 !classDefinition: 'MarsRover class' category: 'MarsRover'!
 MarsRover class
 	instanceVariableNames: ''!
+
+!MarsRover class methodsFor: 'as yet unclassified' stamp: 'IB 11/18/2021 12:02:17'!
+direccionInvalidaError
+	^ 'Direccion Invalida'.! !
 
 !MarsRover class methodsFor: 'as yet unclassified' stamp: 'lj 11/18/2021 05:35:05'!
 enCoordenadas: aPoint conDireccion: direccion 
