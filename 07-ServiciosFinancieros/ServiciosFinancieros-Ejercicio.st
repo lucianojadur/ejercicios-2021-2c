@@ -179,32 +179,45 @@ test07AccountKnowsItsTransactions
 	self assert: (account transactions includes: deposit).
 ! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'lj 11/28/2021 01:55:21'!
-test08AnAccountCanReceiveMoneyFromAnotherAccount
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'IB 11/28/2021 14:39:03'!
+test08RegisterTransferBetweenTwoAccounts
 	
-	|receiver emitter someMoney|
+	|receiver emitter someMoney transfer|
+	
+	receiver := ReceptiveAccount new.
+	emitter := ReceptiveAccount new.
+	someMoney := 100 * peso.
+	
+	transfer := Transfer from: emitter to: receiver for: someMoney.
+	
+	self assert: (emitter hasRegistered: transfer withdrawLeg).
+	self assert: (receiver hasRegistered: transfer depositLeg).	! !
+
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'IB 11/28/2021 15:12:59'!
+test09TransferLegsKnowEachother
+	|receiver emitter someMoney transfer|
 	
 	receiver := ReceptiveAccount new.
 	emitter := ReceptiveAccount new.
 	someMoney := 100 * peso.
 	
-	emitter transfer: someMoney to: receiver.
+	transfer := Transfer from: emitter to: receiver for: someMoney.
 	
-	self assert: someMoney equals: receiver balance.! !
+	self assert: (transfer withdrawLeg) equals: (transfer depositLeg counterpart).
+	self assert: (transfer depositLeg) equals: (transfer withdrawLeg counterpart).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'lj 11/28/2021 02:25:52'!
-test09AnAccountLosesMoneyIfItTransfersToAnotherAccount
-
-	|receiver emitter someMoney emittersInitialBalance|
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'IB 11/28/2021 20:42:09'!
+test10AccountCanTransferMoneyToAnother
+	|receiver emitter someMoney |
 	
 	receiver := ReceptiveAccount new.
 	emitter := ReceptiveAccount new.
+	Deposit register: 150*peso on: emitter.
 	someMoney := 100 * peso.
-	emittersInitialBalance  := 2 * someMoney .
-	Deposit register: emittersInitialBalance on: emitter.
 	
-	emitter transfer: someMoney to: receiver .
-	self assert:  someMoney equals: emitter balance.! !
+	Transfer from: emitter to: receiver for: someMoney.
+	self assert: 50*peso equals: emitter balance.
+	self assert: 100*peso equals: receiver balance.! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
@@ -214,15 +227,19 @@ Object subclass: #AccountTransaction
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
+!AccountTransaction methodsFor: 'value' stamp: 'IB 11/28/2021 15:10:19'!
 value 
 
-	self subclassResponsibility ! !
+	^ value. ! !
 
 
-!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'IB 11/25/2021 20:10:44'!
+!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 15:03:37'!
+initializeFor: aValue
+	value := aValue.! !
+
+!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 15:09:14'!
 updateBalance
-	^ self subclassResponsibility .! !
+	self subclassResponsibility .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -230,7 +247,11 @@ updateBalance
 AccountTransaction class
 	instanceVariableNames: ''!
 
-!AccountTransaction class methodsFor: 'instance creation' stamp: 'NR 10/17/2019 03:22:00'!
+!AccountTransaction class methodsFor: 'instance creation' stamp: 'IB 11/28/2021 15:07:41'!
+for: aValue
+	^ self new initializeFor: aValue.! !
+
+!AccountTransaction class methodsFor: 'instance creation' stamp: 'IB 11/28/2021 15:08:02'!
 register: aValue on: account
 
 	| transaction |
@@ -248,32 +269,51 @@ AccountTransaction subclass: #Deposit
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Deposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:45'!
-initializeFor: aValue
-
-	value := aValue ! !
-
-
-!Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
-value
-
-	^ value! !
 
 
 !Deposit methodsFor: 'as yet unclassified' stamp: 'IB 11/25/2021 20:12:58'!
 updateBalance
 	^ [:balance | balance + value].! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: #TransferTransaction category: 'ServiciosFinancieros-Ejercicio'!
+AccountTransaction subclass: #TransferTransaction
+	instanceVariableNames: 'counterpart'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
 
-!classDefinition: 'Deposit class' category: 'ServiciosFinancieros-Ejercicio'!
-Deposit class
-	instanceVariableNames: ''!
+!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 14:59:57'!
+associateTransaction: aTransaction
+	counterpart := aTransaction .! !
 
-!Deposit class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/13/2011 18:38'!
-for: aValue
+!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 15:00:08'!
+counterpart
+	^ counterpart.! !
 
-	^ self new initializeFor: aValue ! !
+
+!classDefinition: #TransferDeposit category: 'ServiciosFinancieros-Ejercicio'!
+TransferTransaction subclass: #TransferDeposit
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 20:38:40'!
+updateBalance
+	^ [:balance | balance + value].! !
+
+
+!classDefinition: #TransferWithdraw category: 'ServiciosFinancieros-Ejercicio'!
+TransferTransaction subclass: #TransferWithdraw
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 20:38:51'!
+updateBalance
+	^ [:balance | balance - value].! !
 
 
 !classDefinition: #Withdraw category: 'ServiciosFinancieros-Ejercicio'!
@@ -283,32 +323,11 @@ AccountTransaction subclass: #Withdraw
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Withdraw methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:46'!
-initializeFor: aValue
-
-	value := aValue ! !
-
-
-!Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:33'!
-value
-
-	^ value! !
 
 
 !Withdraw methodsFor: 'as yet unclassified' stamp: 'IB 11/25/2021 20:13:14'!
 updateBalance
 	^ [:balance | balance - value].! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Withdraw class' category: 'ServiciosFinancieros-Ejercicio'!
-Withdraw class
-	instanceVariableNames: ''!
-
-!Withdraw class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/13/2011 18:33'!
-for: aValue
-
-	^ self new initializeFor: aValue ! !
 
 
 !classDefinition: #FinancialEntity category: 'ServiciosFinancieros-Ejercicio'!
@@ -408,3 +427,47 @@ transfer: anAmountOfMoney to: anotherAccount
 	
 	aDeposit := Deposit register: anAmountOfMoney on: anotherAccount .
 	aWithdraw := Withdraw register: anAmountOfMoney on: self.! !
+
+
+!classDefinition: #Transfer category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #Transfer
+	instanceVariableNames: 'value withdrawal deposit'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 15:01:52'!
+depositLeg
+	^ deposit. ! !
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 15:13:50'!
+value
+	^ value.! !
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 15:01:43'!
+withValue: aValue withdrawal: aTransferWithdraw deposit: aTransferDeposit
+	value := aValue.
+	withdrawal := aTransferWithdraw .
+	deposit := aTransferDeposit .
+	! !
+
+!Transfer methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 15:02:03'!
+withdrawLeg
+	^ withdrawal.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Transfer class' category: 'ServiciosFinancieros-Ejercicio'!
+Transfer class
+	instanceVariableNames: ''!
+
+!Transfer class methodsFor: 'as yet unclassified' stamp: 'IB 11/28/2021 14:58:03'!
+from: emitter to: receiver for: anAmmount 
+	| newTransfer withdraw deposit |
+	newTransfer := Transfer new.
+	withdraw := TransferWithdraw register: anAmmount on: emitter.
+	deposit := TransferDeposit register: anAmmount on: receiver.
+	withdraw associateTransaction: deposit.
+	deposit associateTransaction: withdraw.
+	newTransfer withValue: anAmmount withdrawal: withdraw deposit: deposit.
+	^ newTransfer.! !
