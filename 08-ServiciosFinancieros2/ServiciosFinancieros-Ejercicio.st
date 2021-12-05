@@ -295,6 +295,75 @@ test10AccountCanTransferMoneyToAnother
 	self assert: 100*peso equals: receiver balance.! !
 
 
+!classDefinition: #TransferNetTest category: 'ServiciosFinancieros-Ejercicio'!
+TestCase subclass: #TransferNetTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'lj 12/5/2021 18:22:23'!
+setUp
+
+	|accountB accountA aTransferNet|
+	
+	accountB := ReceptiveAccount new.
+	accountA := ReceptiveAccount new.
+	aTransferNet := TransferNet new.! !
+
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'lj 12/5/2021 18:22:14'!
+test00ATransferNetReportOfANewAccountIsZero
+	|accountA aTransferNet|
+	
+	accountA := ReceptiveAccount new.
+	aTransferNet := TransferNet new.
+	
+	self assert: 0 * peso equals: (aTransferNet of: accountA).! !
+
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'lj 12/5/2021 18:20:39'!
+test01
+	
+	|accountB accountA aTransferNet|
+	
+	accountB := ReceptiveAccount new.
+	accountA := ReceptiveAccount new.
+	aTransferNet := TransferNet new.
+	
+	accountA transfer: 100 * peso to: accountB .
+	
+	self assert: 100 * peso equals: (aTransferNet of: accountB).! !
+
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'lj 12/5/2021 18:20:22'!
+test02
+
+	|accountB accountA aTransferNet|
+	
+	accountB := ReceptiveAccount new.
+	accountA := ReceptiveAccount new.
+	aTransferNet := TransferNet new.
+	
+	accountA transfer: 100 * peso to: accountB .
+	
+	self assert: - 100 * peso equals: (aTransferNet of: accountA).
+	self assert: 100 * peso equals: (aTransferNet of: accountB).! !
+
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'lj 12/5/2021 18:23:30'!
+test03
+	
+	|accountB accountA aTransferNet|
+	
+	accountB := ReceptiveAccount new.
+	accountA := ReceptiveAccount new.
+	aTransferNet := TransferNet new.
+	
+	accountA transfer: 100 * peso to: accountB .
+	accountB transfer: 60 * peso to: accountA.
+	
+	
+	self assert: -40 * peso equals: (aTransferNet of: accountA).
+	self assert: 40 * peso equals: (aTransferNet of: accountB).! !
+
+
 !classDefinition: #AccountSummary category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #AccountSummary
 	instanceVariableNames: ''
@@ -408,8 +477,6 @@ AccountTransaction subclass: #Deposit
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-
-
 !Deposit methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 14:53:47'!
 report
 	^ [ :aSummary | aSummary reportForDeposit: self value ].! !
@@ -466,6 +533,11 @@ report
 updateBalance
 	^ [:balance | balance - value].! !
 
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'lj 12/5/2021 18:16:26'!
+value
+	
+	^ (-1 *  value).! !
+
 
 !classDefinition: #Withdraw category: 'ServiciosFinancieros-Ejercicio'!
 AccountTransaction subclass: #Withdraw
@@ -473,8 +545,6 @@ AccountTransaction subclass: #Withdraw
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
-
-
 
 !Withdraw methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 14:54:37'!
 report
@@ -576,12 +646,22 @@ transactions
 
 	^ transactions copy! !
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'lj 11/28/2021 02:10:19'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'lj 12/5/2021 18:12:26'!
 transfer: anAmountOfMoney to: anotherAccount
 	|aDeposit aWithdraw|
 	
-	aDeposit := Deposit register: anAmountOfMoney on: anotherAccount .
-	aWithdraw := Withdraw register: anAmountOfMoney on: self.! !
+	aDeposit := TransferDeposit register: anAmountOfMoney on: anotherAccount .
+	aWithdraw := TransferWithdraw register: anAmountOfMoney on: self.! !
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'lj 12/5/2021 18:13:09'!
+transferNet
+	|net|
+	net := 0 * peso.
+	transactions do: [ :aTransaction|
+		(aTransaction isKindOf: TransferTransaction) ifTrue: 
+		[net := net + aTransaction value.]
+	].
+	^ net.! !
 
 
 !classDefinition: #Transfer category: 'ServiciosFinancieros-Ejercicio'!
@@ -626,3 +706,16 @@ from: emitter to: receiver for: anAmmount
 	deposit associateTransaction: withdraw.
 	newTransfer withValue: anAmmount withdrawal: withdraw deposit: deposit.
 	^ newTransfer.! !
+
+
+!classDefinition: #TransferNet category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #TransferNet
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'lj 12/5/2021 18:08:13'!
+of: anAccount
+
+	^ anAccount transferNet.! !
