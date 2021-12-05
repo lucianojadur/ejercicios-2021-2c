@@ -295,64 +295,22 @@ test10AccountCanTransferMoneyToAnother
 	self assert: 100*peso equals: receiver balance.! !
 
 
-!classDefinition: #AccountSummary category: 'ServiciosFinancieros-Ejercicio'!
-Object subclass: #AccountSummary
+!classDefinition: #TransferNetTest category: 'ServiciosFinancieros-Ejercicio'!
+TestCase subclass: #TransferNetTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 18:00:00'!
-balanceReport: balance
-	| report |
-	report := 'Balance = '.
-	report := report append: balance asString.
-	^ report.! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:58:55'!
-of: anAccount
-	| report transactions |
-	report := ''.
-	transactions := anAccount transactions .
-	transactions do: [ :aTransaction | report := report append: (aTransaction report value: self)].
-	report := report append: (self balanceReport: anAccount balance).
-	^ report.! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:57:08'!
-reportForDeposit: value
-	| report |
-	report := 'Depósito por '.
-	report := report append: value asString.
-	report := report append: '
-	'.
-	^ report.! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:57:23'!
-reportForTransferDeposit: value
-	| report |
-	report := 'Entrada por transferencia de '.
-	report := report append: value asString.
-	report := report append: '
-	'.
-	^ report.! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 18:13:32'!
-reportForTransferWithdraw: value
-	| report |
-	report := 'Salida por transferencia de '.
-	report := report append: value asString.
-	report := report append: '
-	'.
-	^ report.! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:57:48'!
-reportForWithdraw: value
-	| report |
-	report := report := 'Extracción por '.
-	report := report append: value asString.
-	report := report append: '
-	'.
-	^ report.! !
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:35:09'!
+test01GetTransferNetFromAccountWithNoTransfers
+	| account transferNet |
+	account := ReceptiveAccount new.
+	Deposit register: 100*peso on: account.
+	Withdraw register: 30*peso on: account.
+	transferNet := TransferNet new.
+	self assert: 0*peso equals: (transferNet of: account).
+	! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
@@ -582,6 +540,118 @@ transfer: anAmountOfMoney to: anotherAccount
 	
 	aDeposit := Deposit register: anAmountOfMoney on: anotherAccount .
 	aWithdraw := Withdraw register: anAmountOfMoney on: self.! !
+
+
+!classDefinition: #Report category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #Report
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!Report methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:30:35'!
+of: anAccount
+	self subclassResponsibility .! !
+
+!Report methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:31:00'!
+reportForDeposit: value
+	self subclassResponsibility .! !
+
+!Report methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:30:55'!
+reportForTransferDeposit: value
+	self subclassResponsibility .! !
+
+!Report methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:31:19'!
+reportForTransferWithdraw: value
+	self subclassResponsibility .! !
+
+!Report methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:31:23'!
+reportForWithdraw: value
+	self subclassResponsibility .! !
+
+
+!classDefinition: #AccountSummary category: 'ServiciosFinancieros-Ejercicio'!
+Report subclass: #AccountSummary
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 18:00:00'!
+balanceReport: balance
+	| report |
+	report := 'Balance = '.
+	report := report append: balance asString.
+	^ report.! !
+
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:58:55'!
+of: anAccount
+	| report transactions |
+	report := ''.
+	transactions := anAccount transactions .
+	transactions do: [ :aTransaction | report := report append: (aTransaction report value: self)].
+	report := report append: (self balanceReport: anAccount balance).
+	^ report.! !
+
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:57:08'!
+reportForDeposit: value
+	| report |
+	report := 'Depósito por '.
+	report := report append: value asString.
+	report := report append: '
+	'.
+	^ report.! !
+
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:57:23'!
+reportForTransferDeposit: value
+	| report |
+	report := 'Entrada por transferencia de '.
+	report := report append: value asString.
+	report := report append: '
+	'.
+	^ report.! !
+
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 18:13:32'!
+reportForTransferWithdraw: value
+	| report |
+	report := 'Salida por transferencia de '.
+	report := report append: value asString.
+	report := report append: '
+	'.
+	^ report.! !
+
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 17:57:48'!
+reportForWithdraw: value
+	| report |
+	report := report := 'Extracción por '.
+	report := report append: value asString.
+	report := report append: '
+	'.
+	^ report.! !
+
+
+!classDefinition: #TransferNet category: 'ServiciosFinancieros-Ejercicio'!
+Report subclass: #TransferNet
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:36:50'!
+of: anAccount
+	| transferNet transactions |
+	transferNet := 0.
+	transactions := anAccount transactions .
+	transactions do: [ :aTransaction | transferNet := transferNet + (aTransaction report value: self)].
+	^ transferNet.! !
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:37:40'!
+reportForDeposit: value
+	^ 0*peso.! !
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:37:34'!
+reportForWithdraw: value
+	^ 0*peso.! !
 
 
 !classDefinition: #Transfer category: 'ServiciosFinancieros-Ejercicio'!
