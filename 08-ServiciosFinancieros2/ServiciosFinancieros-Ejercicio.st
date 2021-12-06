@@ -312,6 +312,31 @@ test01GetTransferNetFromAccountWithNoTransfers
 	self assert: 0*peso equals: (transferNet of: account).
 	! !
 
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'IB 12/6/2021 11:15:31'!
+test02GetTransferNetFromAccountsWithTransfers
+	| emitterAccount receiverAccount transferNet |
+	emitterAccount := ReceptiveAccount new.
+	receiverAccount := ReceptiveAccount new.
+	Transfer from: emitterAccount to: receiverAccount for: 60*peso.
+	transferNet := TransferNet new.
+	self assert: -60*peso equals: (transferNet of: emitterAccount).
+	self assert: 60*peso equals: (transferNet of: receiverAccount).
+	! !
+
+!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'IB 12/6/2021 11:18:33'!
+test03GetTransferNetFromAccountsWithMultipleTransactions
+	| accountA accountB transferNet |
+	accountA := ReceptiveAccount new.
+	accountB := ReceptiveAccount new.
+	Deposit register: 100*peso on: accountA.
+	Withdraw register: 30*peso on: accountA.
+	Transfer from: accountA to: accountB for: 60*peso.
+	Transfer from: accountB to: accountA for: 30*peso.
+	transferNet := TransferNet new.
+	self assert: -30*peso equals: (transferNet of: accountA).
+	self assert: 30*peso equals: (transferNet of: accountB).
+	! !
+
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #AccountTransaction
@@ -365,8 +390,6 @@ AccountTransaction subclass: #Deposit
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
-
-
 
 !Deposit methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 14:53:47'!
 report
@@ -431,8 +454,6 @@ AccountTransaction subclass: #Withdraw
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
-
-
 
 !Withdraw methodsFor: 'as yet unclassified' stamp: 'IB 12/4/2021 14:54:37'!
 report
@@ -648,6 +669,14 @@ of: anAccount
 !TransferNet methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:37:40'!
 reportForDeposit: value
 	^ 0*peso.! !
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'IB 12/6/2021 11:12:35'!
+reportForTransferDeposit: value
+	^ value.! !
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'IB 12/6/2021 11:13:08'!
+reportForTransferWithdraw: value
+	^ value negated.! !
 
 !TransferNet methodsFor: 'as yet unclassified' stamp: 'IB 12/5/2021 20:37:34'!
 reportForWithdraw: value
